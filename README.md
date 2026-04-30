@@ -1,7 +1,7 @@
 
 # Welcome to GeoLens
 A brower extension that supports users in checking whether geomedia are truthful. GeoLens is integrated with GeoCam and implements additional validation methods.
-# Contributers
+# Contributors
 
 <p align="center">
   <a href="https://github.com/laurenfissel11-ux">
