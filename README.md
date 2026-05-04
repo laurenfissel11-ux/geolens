@@ -14,26 +14,26 @@ This project is a browser extension built with [WXT](https://wxt.dev), a meta-fr
 
 ### Prerequisites
 
--   **Node.js v18 or higher** (developed against v24). Verify with:
+- **Node.js v18 or higher** (developed against v24). Verify with:
 
-    ``` bash
-    node --version
-    ```
+  ```bash
+  node --version
+  ```
 
--   A Chromium-based browser for testing (Chrome recommended).
+- A Chromium-based browser for testing (Chrome recommended).
 
 ### One-time setup
 
 From the repo root:
 
-``` bash
+```bash
 cd extension
 npm install
 ```
 
 ### Running in development mode
 
-``` bash
+```bash
 npm run dev
 ```
 
@@ -43,7 +43,7 @@ The dev server watches your files and auto-reloads on most changes. **Exceptions
 
 ### Project structure
 
-```         
+```
 extension/
 ├── entrypoints/         # Each file here is a "door" the browser uses to enter the extension
 │   ├── background.ts    # Background service worker — registers context menu, dispatches messages
@@ -67,10 +67,10 @@ The validation is currently a **stub** — it always succeeds after a fake delay
 
 ### Useful debugging tools
 
--   **Service worker console** (background script): `chrome://extensions` → toggle on Developer mode → find this extension → click "service worker" under "Inspect views".
--   **Page console** (content script): right-click any page → Inspect → Console tab.
+- **Service worker console** (background script): `chrome://extensions` → toggle on Developer mode → find this extension → click "service worker" under "Inspect views".
+- **Page console** (content script): right-click any page → Inspect → Console tab.
 
-The two scripts log to *different* consoles, since they run in different contexts. Open both when debugging.
+The two scripts log to _different_ consoles, since they run in different contexts. Open both when debugging.
 
 ## Next Step: Replace the Stub With GeoCam Validation
 
@@ -88,8 +88,8 @@ Independent of the GeoCam API specifics, the following design choices are worth 
 
 Two reasonable options:
 
--   **Option A: Call directly from the content script.** Simpler. Replace `stubValidate` directly with a real call.
--   **Option B: Call from the background script.** Cleaner separation: the content script messages the background, the background calls the API, and replies with the result. This is closer to a "production" architecture and avoids potential CORS issues (background scripts can call any URL the manifest permits, regardless of the page's CORS policy).
+- **Option A: Call directly from the content script.** Simpler. Replace `stubValidate` directly with a real call.
+- **Option B: Call from the background script.** Cleaner separation: the content script messages the background, the background calls the API, and replies with the result. This is closer to a "production" architecture and avoids potential CORS issues (background scripts can call any URL the manifest permits, regardless of the page's CORS policy).
 
 **Option B is recommended** for anything beyond a quick test. Reasons: - Avoids potential CORS issues (background scripts are exempt from many CORS restrictions that content scripts face). - Keeps secrets/keys out of the content script's context, which shares its environment with the host webpage. - Centralizes the integration so future plugins can reuse the same logic.
 
@@ -97,11 +97,11 @@ Two reasonable options:
 
 Whichever script makes the HTTP call, the extension must explicitly declare which external hosts it's allowed to contact. In `wxt.config.ts`:
 
-``` typescript
+```typescript
 export default defineConfig({
   manifest: {
-    permissions: ['contextMenus'],
-    host_permissions: ['http://localhost:*/*'],  // adjust to actual host
+    permissions: ["contextMenus"],
+    host_permissions: ["http://localhost:*/*"], // adjust to actual host
   },
 });
 ```
@@ -120,15 +120,15 @@ Toggle between stub and real validation while debugging — useful when the serv
 
 ### Verification (once integrated)
 
--   Start the validation service locally.
--   Run `npm run dev`.
--   Right-click an image → Validate image.
--   Confirm the checkmark appears for images the service deems valid, and does *not* appear for invalid ones.
--   Check both consoles (page and service worker) for any errors.
+- Start the validation service locally.
+- Run `npm run dev`.
+- Right-click an image → Validate image.
+- Confirm the checkmark appears for images the service deems valid, and does _not_ appear for invalid ones.
+- Check both consoles (page and service worker) for any errors.
 
 ### Considerations once basic integration works
 
--   **Error handling**: What should happen if the service is unreachable? Show an error overlay? Silent fail? Currently the code falls back to "do nothing."
--   **Loading state**: Image validation may take longer than the 500ms stub. A spinner or "validating..." indicator would help.
--   **Caching**: If the same image is validated repeatedly, can we cache the result?
--   **Configurability**: The service URL is hardcoded. Eventually it should be a setting in the extension's options page.
+- **Error handling**: What should happen if the service is unreachable? Show an error overlay? Silent fail? Currently the code falls back to "do nothing."
+- **Loading state**: Image validation may take longer than the 500ms stub. A spinner or "validating..." indicator would help.
+- **Caching**: If the same image is validated repeatedly, can we cache the result?
+- **Configurability**: The service URL is hardcoded. Eventually it should be a setting in the extension's options page.
